@@ -88,8 +88,8 @@ def imprimir_resultados(ctx):
     print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}")
     for operador in range(ctx.N):
         print(f"Porcentaje de tiempo ocioso operador {operador}: {ctx.PTO[operador]}%")
-    print(f"Porcentaje de tiempo de atencion: {ctx.PTA}")
-    print(f"Porcentaje de tiempo de espera: {ctx.PTE}")
+    print(f"Porcentaje de tiempo de atencion: {ctx.PTA}%")
+    print(f"Porcentaje de tiempo de espera: {ctx.PTE}%")
 
 
 def ir_al_final(ctx):
