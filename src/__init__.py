@@ -1,12 +1,15 @@
 import random
 import math
+import sys
+
+sys.setrecursionlimit(1500)
 
 
 ### START FDPS ###
 # IA: Intervalo entre arribo de llamados de clientes all call-center en minutos
 def ia():
     random = generar_random_con_restriccion(0)
-    return (2.0074 / ((1 / random - 1) ** (1 / 29))) + 29
+    return ((2.0074 / ((1 / random - 1) ** (1 / 29))) + 29) / 60
 
 
 # TAI: TIempo de atencion de producto individual en minutos.
@@ -24,7 +27,7 @@ def tap():
 def generar_random_con_restriccion(restriccion):
     R = generar_random()
     if R == restriccion:
-        return generar_random_con_restriccion()
+        return generar_random_con_restriccion(restriccion)
     else:
         return R
 
