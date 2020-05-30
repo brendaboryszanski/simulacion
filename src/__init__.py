@@ -98,6 +98,7 @@ def imprimir_resultados(ctx):
     print("Variables de control elegidas")
     print(f"N (Numero de operadores trbajando en el call-center): {ctx.N}")
     print(f"P (Numero de personas por limite en la cola): {ctx.P}")
+    print(f"TF (Tiempo final de simulacion): {ctx.TF}")
     print("___________________________")
     print("Resultados")
     print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}")
@@ -182,7 +183,7 @@ def ejectutar_rama_llegada(ctx):
                 atencion_inmediata(ctx)
         else:
             # Cantidad limite de personas superada
-            ctx.SPVNA = ctx.SPVNA + 1
+            ctx.SPVNA += 1
 
     ir_al_final(ctx)
 
