@@ -9,7 +9,7 @@ sys.setrecursionlimit(1500)
 # IA: Intervalo entre arribo de llamados de clientes all call-center en minutos
 def ia():
     random = generar_random_con_restriccion(0)
-    return ((2.0074 / ((1 / random - 1) ** (1 / 29))) + 29) / 60
+    return (2.2529/((1/random-1)**(1/5))+5)/60
 
 
 # TAI: TIempo de atencion de producto individual en minutos.
