@@ -32,11 +32,13 @@ def generar_random_con_restriccion(restriccion):
 ### END FDPS ###
 
 class VariablesGlobales():
-    def __init__(self, N, P):
+    def __init__(self, N, P, TF):
         # N: Numero de operadores trbajando en el call-center
         self.N = N
         # P: Numero de personas por limite en la cola
         self.P = P
+        # TF: Tiempo final.
+        self.TF = TF
         # HV: High Value
         self.HV = float('inf')
 
@@ -59,8 +61,6 @@ class VariablesGlobales():
         self.TPLL = 0
         # TPS(i): Tiempo de salida del sistema del cliente por operador.
         self.TPS = [self.HV] * self.N
-        # TF: Tiempo final.
-        self.TF = 10
         # ITO(i): Comienzo de tiempo ocioso por operator
         self.ITO = [0] * self.N
         #   PPVNA = Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas
@@ -207,6 +207,7 @@ def obtenerNumero(mensaje):
 if __name__ == '__main__':
     cantidad_operadores = obtenerNumero("Ingrese cantidad de operadores")
     maximo_en_cola = obtenerNumero("Ingrese numero de personas por limite en la cola")
+    tiempo_final_de_simulacion = obtenerNumero("Ingrese tiempo final de simulacion")
 
-    variables_globales = VariablesGlobales(cantidad_operadores, maximo_en_cola)
+    variables_globales = VariablesGlobales(cantidad_operadores, maximo_en_cola, tiempo_final_de_simulacion)
     empezar_simulacion(variables_globales)
