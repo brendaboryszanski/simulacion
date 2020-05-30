@@ -1,21 +1,31 @@
 import random
+import math
 
 
 ### START FDPS ###
 # IA: Intervalo entre arribo de llamados de clientes all call-center en minutos
 def ia():
-    return 1
+    R = generar_random_con_restriccion(0)
+    return 2.0074/((1/R -1) * (1/29)) + 29
 
 
 # TAI: TIempo de atencion de producto individual en minutos.
 def tai():
-    return 3
+    R = generar_random()
+    return tap() * R
 
 
 # TAP: Tiempo de atencion de paquete en minutos. 
 def tap():
-    return 5
+    R = generar_random_con_restriccion(0)
+    return 2/((1/R -1) * (1/1250)) + 1250
 
+def generar_random_con_restriccion(restriccion):
+    R = generar_random()
+    if R == restriccion:
+        return generar_random_con_restriccion()
+    else:
+        return R
 
 ### END FDPS ###
 
