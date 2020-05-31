@@ -21,7 +21,7 @@ def tai():
 # TAP: Tiempo de atencion de paquete en minutos. 
 def tap():
     random = generar_random_con_restriccion(0)
-    return (2 / ((1 / random - 1) ** (1 / 1250))) + 1250
+    return ((2 / ((1 / random - 1) ** (1 / 1250))) + 1250)/60
 
 
 def generar_random_con_restriccion(restriccion):
@@ -58,6 +58,8 @@ class VariablesGlobales():
         self.SPS = float(0)
         #  STA: Sumatoria de tiempos de atencion 
         self.STA = 0
+        #  DTAA: Diccionario de tiempos de atencion  auxiliar
+        self.DTAA = {}
         # STO(i): Sumatoria de tiempo ocioso por operador
         self.STO = [0] * self.N
         # TPLL: Tiempo de llegada del llamado del cliente al call-center.
@@ -104,8 +106,13 @@ def imprimir_resultados(ctx):
     print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}")
     for operador in range(ctx.N):
         print(f"Porcentaje de tiempo ocioso operador {operador}: {ctx.PTO[operador]}%")
-    print(f"Porcentaje de tiempo de atencion: {ctx.PTA}%")
-    print(f"Porcentaje de tiempo de espera: {ctx.PTE}%")
+    print(f"Promedio de tiempo de atencion: {ctx.PTA}")
+    print(f"Promedio de tiempo de espera: {ctx.PTE}")
+    print(f"Sumatoria de tiempo de atencion: {ctx.STA}")
+    print(f"Sumatoria de permanencia en el sistema: {ctx.SPS}")
+    print(f"Auxiliar tiempos de atencion: {ctx.DTAA}")
+
+
 
 
 def ir_al_final(ctx):
@@ -132,16 +139,24 @@ def asignar_proximo_tps(ctx, indice_operador):
         # Atencion de reserva con un unico elemento
         tiempo_de_atencion_producto_individual = tai()
         ctx.TPS[indice_operador] = ctx.T + tiempo_de_atencion_producto_individual
-        ctx.STA += tiempo_de_atencion_producto_individual
+        # En vez de sumar los tiempos de atencion directamente, se agregan a una variable
+        # auxiliar para luego ser sumados en la salida.
+        ctx.DTAA[indice_operador] = tiempo_de_atencion_producto_individual
     else:
         # Atencion de reserva con un paquete
         tiempo_de_atencion_paquete = tap()
         ctx.TPS[indice_operador] = ctx.T + tiempo_de_atencion_paquete
-        ctx.STA += tiempo_de_atencion_paquete
+        # En vez de sumar los tiempos de atencion directamente, se agregan a una variable
+        # auxiliar para ser sumados en la salida.
+        ctx.DTAA[indice_operador] = tiempo_de_atencion_paquete
 
 
 def ejecutar_rama_salida(ctx, indice_operador):
     ctx.SPS += (ctx.TPS[indice_operador] - ctx.T) * ctx.NS
+    # Sumo la  el tiempo de atencion de la llegada guardado en variable auxiliar.
+    # Se hace de esta manera porque debido al corto IA, al momento de imprimir los resultados
+    # SPS terminaba siendo menor que STA.
+    ctx.STA += ctx.DTAA[indice_operador]
     ctx.T = ctx.TPS[indice_operador]
     ctx.NS -= 1
     if ctx.NS >= ctx.N:
