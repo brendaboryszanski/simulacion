@@ -14,20 +14,20 @@ def ia():
 
 # TAI: TIempo de atencion de producto individual en minutos.
 def tai():
-    random = generar_random()
-    return tap() * random
+    random = generar_random_con_restriccion(1, 0)
+    return (2.0029/((1/random-1)**(1/418.0000))+418.0000)/60
 
 
 # TAP: Tiempo de atencion de paquete en minutos. 
 def tap():
-    random = generar_random_con_restriccion(0)
-    return ((2 / ((1 / random - 1) ** (1 / 1250))) + 1250)/60
+    random = generar_random_con_restriccion(1, 0)
+    return (2.0003/((1/random-1)**(1/708.0000)+708.0000) + 1250)/60
 
 
-def generar_random_con_restriccion(restriccion):
+def generar_random_con_restriccion(*restricciones):
     R = generar_random()
-    if R == restriccion:
-        return generar_random_con_restriccion(restriccion)
+    if R in restricciones:
+        return generar_random_con_restriccion(restricciones)
     else:
         return R
 
@@ -106,10 +106,10 @@ def imprimir_resultados(ctx):
     print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}")
     for operador in range(ctx.N):
         print(f"Porcentaje de tiempo ocioso operador {operador}: {ctx.PTO[operador]}%")
-    print(f"Promedio de tiempo de atencion: {ctx.PTA}")
-    print(f"Promedio de tiempo de espera: {ctx.PTE}")
-    print(f"Sumatoria de tiempo de atencion: {ctx.STA}")
-    print(f"Sumatoria de permanencia en el sistema: {ctx.SPS}")
+    print(f"Promedio de tiempo de atencion: {ctx.PTA} minutos")
+    print(f"Promedio de tiempo de espera: {ctx.PTE} minutos")
+    print(f"Sumatoria de tiempo de atencion: {ctx.STA} minutos")
+    print(f"Sumatoria de permanencia en el sistema: {ctx.SPS} minutos")
     print(f"Auxiliar tiempos de atencion: {ctx.DTAA}")
 
 
