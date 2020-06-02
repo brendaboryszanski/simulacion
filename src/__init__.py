@@ -98,6 +98,7 @@ def obtener_operador_desocupado(ctx):
     for i in range(len(ctx.TPS)):
         if ctx.TPS[i] == ctx.HV and ctx.AUXOL[i] == minima_cantidad_de_veces_que_atendio:
             operador_elegido = i
+            break
     return operador_elegido
 
 
