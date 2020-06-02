@@ -96,8 +96,8 @@ def obtener_operador_desocupado(ctx):
     min = ctx.HV
     indice_minimo = 0
     for i in range(ctx.N):
-        if ctx.TPS[i] == ctx.HV and ctx.AUXOL[i] <= min:
-            min = ctx.AUXOL[i]
+        if ctx.TPS[i] == ctx.HV and ctx.AUXCA[i] <= min:
+            min = ctx.AUXCA[i]
             indice_minimo = i
     return indice_minimo
 
@@ -112,11 +112,10 @@ def imprimir_resultados(ctx):
     print(f"TF (Tiempo final de simulacion): {ctx.TF}")
     print("___________________________")
     print("Resultados")
-    print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}")
+    print(f"Porcentaje de personas que viajan dentro de los proximos 3 dias y no son atendidas: {ctx.PPVNA}%")
     for operador in range(ctx.N):
         if ctx.PTO[operador] != 0:
             print(f"Porcentaje de tiempo ocioso operador {operador}: {ctx.PTO[operador]}%")
-    print("Los demas operadores tienen 0 como pocentaje de tiempo ocioso")
     print(f"Promedio de tiempo de atencion: {ctx.PTA} minutos")
     print(f"Promedio de tiempo de espera: {ctx.PTE} minutos")
     print(f"Sumatoria de tiempo de atencion: {ctx.STA} minutos")
@@ -128,7 +127,7 @@ def ir_al_final(ctx):
         # Hay que importarlo aca para evitar la referencia circular
         empezar_simulacion(ctx)
     else:
-        ctx.PPVNA = ctx.SPVNA * 100 / ctx.NT
+        ctx.PPVNA = ctx.SPVNA * 100 / (ctx.NT + ctx.SPVNA)
         ctx.PTA = ctx.STA / ctx.NT
         ctx.PTE = (ctx.SPS - ctx.STA) / ctx.NT
         for operador in range(ctx.N):
@@ -142,7 +141,7 @@ def ir_al_final(ctx):
 
 
 def asignar_proximo_tps(ctx, indice_operador):
-    ctx.AUXOL[indice_operador] += 1
+    ctx.AUXCA[indice_operador] += 1
     R = generar_random()
     if R > 0.78:
         # Atencion de reserva con un unico elemento
