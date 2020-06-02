@@ -2,14 +2,14 @@ import random
 import math
 import sys
 
-sys.setrecursionlimit(6000)
+sys.setrecursionlimit(90000)
 
 
 ### START FDPS ###
 # IA: Intervalo entre arribo de llamados de clientes all call-center en minutos
 def ia():
     random = generar_random_con_restriccion(0)
-    return (2.2529 / ((1 / random - 1) ** (1 / 5)) + 5) / 60
+    return (0.35*random + 0.25)/60
 
 
 # TAI: TIempo de atencion de producto individual en minutos.
@@ -93,13 +93,13 @@ def generar_random():
 
 
 def obtener_operador_desocupado(ctx):
-    minima_cantidad_de_veces_que_atendio = min(ctx.AUXOL)
-    operador_elegido = 0
-    for i in range(len(ctx.TPS)):
-        if ctx.TPS[i] == ctx.HV and ctx.AUXOL[i] == minima_cantidad_de_veces_que_atendio:
-            operador_elegido = i
-            break
-    return operador_elegido
+    min = ctx.HV
+    indice_minimo = 0
+    for i in range(ctx.N):
+        if ctx.TPS[i] == ctx.HV and ctx.AUXOL[i] <= min:
+            min = ctx.AUXOL[i]
+            indice_minimo = i
+    return indice_minimo
 
 
 ###### END FUNCIONES ###########
