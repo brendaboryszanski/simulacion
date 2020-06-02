@@ -2,26 +2,26 @@ import random
 import math
 import sys
 
-sys.setrecursionlimit(1500)
+sys.setrecursionlimit(6000)
 
 
 ### START FDPS ###
 # IA: Intervalo entre arribo de llamados de clientes all call-center en minutos
 def ia():
     random = generar_random_con_restriccion(0)
-    return (2.2529/((1/random-1)**(1/5))+5)/60
+    return (2.2529 / ((1 / random - 1) ** (1 / 5)) + 5) / 60
 
 
 # TAI: TIempo de atencion de producto individual en minutos.
 def tai():
     random = generar_random_con_restriccion(1, 0)
-    return (2.0029/((1/random-1)**(1/418.0000))+418.0000)/60
+    return (2.0029 / ((1 / random - 1) ** (1 / 418.0000)) + 418.0000) / 60
 
 
 # TAP: Tiempo de atencion de paquete en minutos. 
 def tap():
     random = generar_random_con_restriccion(1, 0)
-    return (2.0003/((1/random-1)**(1/708.0000)+708.0000) + 1250)/60
+    return (2.0003 / ((1 / random - 1) ** (1 / 708.0000) + 708.0000) + 1250) / 60
 
 
 def generar_random_con_restriccion(*restricciones):
@@ -79,6 +79,9 @@ class VariablesGlobales():
         # T = Tiempo actual
         self.T = 0
 
+        # Auxiliar, para obtener operadores mas justamente
+        self.AUXOL = [0] * self.N
+
 
 ####### START FUNCIONES #########
 def menor_tps(ctx):
@@ -90,7 +93,12 @@ def generar_random():
 
 
 def obtener_operador_desocupado(ctx):
-    return ctx.TPS.index(ctx.HV)
+    minima_cantidad_de_veces_que_atendio = min(ctx.AUXOL)
+    operador_elegido = 0
+    for i in range(len(ctx.TPS)):
+        if ctx.TPS[i] == ctx.HV and ctx.AUXOL[i] == minima_cantidad_de_veces_que_atendio:
+            operador_elegido = i
+    return operador_elegido
 
 
 ###### END FUNCIONES ###########
@@ -112,9 +120,6 @@ def imprimir_resultados(ctx):
     print(f"Promedio de tiempo de espera: {ctx.PTE} minutos")
     print(f"Sumatoria de tiempo de atencion: {ctx.STA} minutos")
     print(f"Sumatoria de permanencia en el sistema: {ctx.SPS} minutos")
-    print(f"Auxiliar tiempos de atencion: {ctx.DTAA}")
-
-
 
 
 def ir_al_final(ctx):
@@ -123,7 +128,7 @@ def ir_al_final(ctx):
         empezar_simulacion(ctx)
     else:
         ctx.PPVNA = ctx.SPVNA * 100 / ctx.NT
-        ctx.PTA = ctx.STA / ctx.N
+        ctx.PTA = ctx.STA / ctx.NT
         ctx.PTE = (ctx.SPS - ctx.STA) / ctx.NT
         for operador in range(ctx.N):
             ctx.PTO[operador] = ctx.STO[operador] * 100 / ctx.T
@@ -136,6 +141,7 @@ def ir_al_final(ctx):
 
 
 def asignar_proximo_tps(ctx, indice_operador):
+    ctx.AUXOL[indice_operador] += 1
     R = generar_random()
     if R > 0.78:
         # Atencion de reserva con un unico elemento
@@ -160,6 +166,7 @@ def ejecutar_rama_salida(ctx, indice_operador):
     # SPS terminaba siendo menor que STA.
     ctx.STA += ctx.DTAA[indice_operador]
     ctx.T = ctx.TPS[indice_operador]
+    ctx.NT += 1
     ctx.NS -= 1
     if ctx.NS >= ctx.N:
         # atiende operador siguiente persona
@@ -192,8 +199,7 @@ def ejectutar_rama_llegada(ctx):
     R = generar_random()
     if R <= 0.65:
         # Persona con reserva en el intervalo de 3 dias
-        ctx.NT += 1
-        if ctx.NS < ctx.P:
+        if ctx.NS < ctx.P + ctx.N:
             # Hay espacio en cola para atender la llamada
             ctx.NS += 1
             if ctx.NS <= ctx.N:
