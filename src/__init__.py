@@ -79,8 +79,8 @@ class VariablesGlobales():
         # T = Tiempo actual
         self.T = 0
 
-        # Auxiliar, para obtener operadores mas justamente
-        self.AUXOL = [0] * self.N
+        # Auxiliar de cantidad de atenciones, para obtener operadores mas justamente
+        self.AUXCA = [0] * self.N
 
 
 ####### START FUNCIONES #########
